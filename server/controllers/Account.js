@@ -1,4 +1,5 @@
 const models = require('../models');
+const session = require('express-session');
 
 const { Account } = models;
 
@@ -11,7 +12,7 @@ const signupPage = (req, res) => {
 };
 
 const logout = (req, res) => {
-  res.session.destroy();
+  req.session.destroy();
   res.redirect('/');
 };
 
