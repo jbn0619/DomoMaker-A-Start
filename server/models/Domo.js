@@ -43,7 +43,7 @@ const DomoSchema = new mongoose.Schema({
 DomoSchema.statics.toAPI = (doc) => ({
   name: doc.name,
   age: doc.age,
-  cute: doc.cute
+  cute: doc.cute,
 });
 
 DomoSchema.statics.findByOwner = (ownerId, callback) => {

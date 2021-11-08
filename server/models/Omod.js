@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const _ = require('underscore');
 
-let omodModel = {};
+let OmodModel = {};
 
 const convertId = mongoose.Types.ObjectId;
 const setName = (name) => _.escape(name).trim();
@@ -43,7 +43,7 @@ const OmodSchema = new mongoose.Schema({
 OmodSchema.statics.toAPI = (doc) => ({
   name: doc.name,
   age: doc.age,
-  evil: doc.evil
+  evil: doc.evil,
 });
 
 OmodSchema.statics.findByOwner = (ownerId, callback) => {
