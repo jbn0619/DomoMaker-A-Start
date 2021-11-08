@@ -6,13 +6,31 @@ var handleDomo = function handleDomo(e) {
     width: 'hide'
   }, 350);
 
-  if ($("#domoName").val() == '' || $("#domoAge").val() == '') {
+  if ($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoCute").val() == '') {
     handleError("RAWR! All fields are required");
     return false;
   }
 
   sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
     loadDomosFromServer();
+  });
+  return false;
+};
+
+var handleOmod = function handleOmod(e) {
+  e.preventDefault();
+  $("#domoMessage").animate({
+    width: 'hide'
+  }, 350);
+
+  if ($("#omodName").val() == '' || $("#omodAge").val() == '' || $("#omodEvil").val() == '') {
+    console.log("This is the error!");
+    handleError("RAWR! All fields are required");
+    return false;
+  }
+
+  sendAjax('POST', $("#omodForm").attr("action"), $("#omodForm").serialize(), function () {
+    loadOmodsFromServer();
   });
   return false;
 };
@@ -57,6 +75,46 @@ var DomoForm = function DomoForm(props) {
   }));
 };
 
+var OmodForm = function OmodForm(props) {
+  return /*#__PURE__*/React.createElement("form", {
+    id: "omodForm",
+    onSubmit: handleOmod,
+    name: "omodForm",
+    action: "/oMaker",
+    method: "POST",
+    className: "omodForm"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "name"
+  }, "Name: "), /*#__PURE__*/React.createElement("input", {
+    id: "omodName",
+    type: "text",
+    name: "name",
+    placeholder: "Omod Name"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "age"
+  }, "Age: "), /*#__PURE__*/React.createElement("input", {
+    id: "domodAge",
+    type: "text",
+    name: "age",
+    placeholder: "Omod Age"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "evil"
+  }, "Evilness: "), /*#__PURE__*/React.createElement("input", {
+    id: "omodEvil",
+    type: "text",
+    name: "evil",
+    placeholder: "Omod Cuteness"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "_csrf",
+    value: props.csrf
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "makeOmodSubmit",
+    type: "submit",
+    value: "Make Omod"
+  }));
+};
+
 var DomoList = function DomoList(props) {
   if (props.domos.length === 0) {
     return /*#__PURE__*/React.createElement("div", {
@@ -87,6 +145,36 @@ var DomoList = function DomoList(props) {
   }, domoNodes);
 };
 
+var OmodList = function OmodList(props) {
+  if (props.omods.length === 0) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "omodList"
+    }, /*#__PURE__*/React.createElement("h3", {
+      className: "emptyDomo"
+    }, "No Omods yet"));
+  }
+
+  var omodNodes = props.omods.map(function (omod) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: omod._id,
+      className: "omod"
+    }, /*#__PURE__*/React.createElement("img", {
+      src: "/assets/img/domoface.jpeg",
+      alt: "omod face",
+      className: "omodFace"
+    }), /*#__PURE__*/React.createElement("h3", {
+      className: "omodName"
+    }, " Name: ", omod.name, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "omodAge"
+    }, " Age: ", omod.age, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "omodEvil"
+    }, "Evilness: ", omod.evil, " "));
+  });
+  return /*#__PURE__*/React.createElement("div", {
+    className: "omodList"
+  }, omodNodes);
+};
+
 var loadDomosFromServer = function loadDomosFromServer() {
   sendAjax('GET', '/getDomos', null, function (data) {
     ReactDOM.render( /*#__PURE__*/React.createElement(DomoList, {
@@ -95,14 +183,29 @@ var loadDomosFromServer = function loadDomosFromServer() {
   });
 };
 
+var loadOmodsFromServer = function loadOmodsFromServer() {
+  sendAjax('GET', '/getOmods', null, function (data) {
+    ReactDOM.render( /*#__PURE__*/React.createElement(OmodList, {
+      omods: data.omods
+    }), document.querySelector("#omods"));
+  });
+};
+
 var setup = function setup(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(DomoForm, {
     csrf: csrf
   }), document.querySelector("#makeDomo"));
+  ReactDOM.render( /*#__PURE__*/React.createElement(OmodForm, {
+    csrf: csrf
+  }), document.querySelector("#makeOmod"));
   ReactDOM.render( /*#__PURE__*/React.createElement(DomoList, {
     domos: []
   }), document.querySelector("#domos"));
+  ReactDOM.render( /*#__PURE__*/React.createElement(OmodList, {
+    omods: []
+  }), document.querySelector("#omods"));
   loadDomosFromServer();
+  loadOmodsFromServer();
 };
 
 var getToken = function getToken() {
